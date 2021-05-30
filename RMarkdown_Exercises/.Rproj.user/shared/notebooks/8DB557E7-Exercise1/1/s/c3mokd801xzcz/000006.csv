@@ -1,0 +1,8 @@
+"0",""
+"0","turtles <- turtles[complete.cases(turtles), ]"
+"0",""
+"0","#### dplyr option"
+"0","#turtles <- turtles %>% "
+"0","#    filter(complete.cases(.))"
+"0",""
+"0","tail(turtles)"

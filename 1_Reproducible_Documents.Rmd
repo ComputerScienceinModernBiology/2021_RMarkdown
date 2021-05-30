@@ -1,0 +1,96 @@
+---
+title: "Creating reproductible documents"
+author: "LMM, AA"
+date: "2021/05/19"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+Notice that you can render the document in the *Viewer* pane, or in a full window.
+
+___
+
+
+
+# Format
+
+Markdown is a lightweight markup language. This means that we apply format to text using a set of characters, making the process easy to perform on any text editor.
+
+## Headings
+
+We can use # before the text to indicate it is a title
+
+# This is heading
+## Subheading
+### Smaller
+###### Up to six levels
+Compare this with regular font
+
+## Emphasis
+
+We can use * and _ to bold and italicize text
+
+I just love **bold text**, sometimes *italics*, but rarely ***both together***
+
+Wen can also use _one underscore_,  __two__, and even ___three___
+
+Bold and Italic Best Practices
+
+Markdown applications don’t agree on how to handle underscores in the middle of a word. For compatibility, use asterisks to bold and italicize the middle of a word for emphasis.
+
+> We can quote text
+>
+> --- Luis
+
+# Equations
+
+We can also add nicely formatted equations using the $ symbol.
+
+$2+2$
+
+The regression had a $R^{2} = 0.85$
+
+$\text{We can add text inside the equation: } A \times B$
+
+---
+
+# Structure for Reproducible Analysis in Rmd
+
+We can use markdown notebooks to build a reproducible analysis. The idea behind this compendium is preparing a more or less standardized set of files and directories that can be executed for any third-party so they will be able to obtain the same results. The suggested minimal structure: 
+
+- **Project directory**: The main project directory should contain an **.Rproj** file and the **R markdown notebook**.
+  - **data**: subdirectory where the data is located
+  - **figures**: subdirectory where the output figures are located
+
+In general terms, the structure must contain **input** and **output** folders. In the previous example, these folders are represented by *data* and *figures*, but our output in other cases may be more than only figures. 
+
+Another extra folder for **analysis** or **scripts** can be added, containing solely R, Python, or other languages' scripts that are required to run the process.
+
+The **R markdown notebook** (or **.Rmd file**) will contain the pipeline of analysis, including:
+    - Loading the libraries required for analysis
+    - Loading the external functions, if an analysis or scripts folder exist
+    - Loading the data, contained in the input or data folders
+    - Performing the analysis itself
+    - Creating the output, displaying it and/or saving the results in the output or figures folder
+
+Regardless, this framework for reproducible research is supposed to be versatile and adaptable to the specifics of our project. Don't be afraid to change it in a way that makes sense to you, while keeping it organized for other people to run the process.
+
+Further reading on the topic of Rmarkdown and all its functions can be found at: https://bookdown.org/yihui/rmarkdown/
+
+

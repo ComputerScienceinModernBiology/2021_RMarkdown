@@ -1,0 +1,6 @@
+"0","py$nestyears %>%"
+"0","    ggplot(aes(x = rownames(.), y = count)) +"
+"0","    geom_bar(stat = 'identity') +"
+"0","    theme_bw() +"
+"0","    xlab(""Year"") +"
+"0","    ylab(""Nests"")"

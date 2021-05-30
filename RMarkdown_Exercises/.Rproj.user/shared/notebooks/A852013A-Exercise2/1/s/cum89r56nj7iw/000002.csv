@@ -1,0 +1,15 @@
+"1","        Year       Nest  ... Nest_Survival  Live_Hatchlings
+0     1989.0  1989001.0  ...           1.0              7.0
+1     1989.0  1989002.0  ...           1.0              5.0
+2     1989.0  1989006.0  ...           1.0              8.0
+3     1989.0  1989007.0  ...           1.0             13.0
+4     1989.0  1989008.0  ...           1.0             12.0
+...      ...        ...  ...           ...              ...
+3181     NaN        NaN  ...           NaN              NaN
+3182     NaN        NaN  ...           NaN              NaN
+3183     NaN        NaN  ...           NaN              NaN
+3184     NaN        NaN  ...           NaN              NaN
+3185     NaN        NaN  ...           NaN              NaN
+
+[3186 rows x 8 columns]
+"

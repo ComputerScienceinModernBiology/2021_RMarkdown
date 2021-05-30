@@ -1,0 +1,106 @@
+---
+title: "R Notebook"
+author: "LMM, AA"
+date: "2021/08/04"
+output: html_notebook
+---
+
+We will be performing Exercise 1 for the CompSciBio Workshop course titled: R Markdown
+
+Our aim is to answer three questions using data on the turtle _Chrysemis picta_ from the paper:
+
+> Lisa E. Schwanz, Rachel M. Bowden, Ricky-John Spencer, and Fredric J. Janzen. 2009. Nesting ecology and offspring recruitment in a long-lived turtle. Ecology 90:1709.
+
+## Loading packages
+
+With the following chunk of code we will be loading the required packages and functions we will use through the analysis process
+
+```{r Loading Packages}
+library(tidyverse)
+```
+## Loading data
+
+With the following chunk, we are reading the data into R
+
+```{r Loading data}
+turtles <- read.delim("Data/data.txt")
+
+```
+
+We notice that some of the last rows in the dataframe are empty, just filled with NAs. Now we can clean this from the dataset
+
+```{r Cleaning data}
+head(turtles)
+tail(turtles)
+
+turtles <- turtles[complete.cases(turtles), ]
+
+#### dplyr option
+#turtles <- turtles %>% 
+#    filter(complete.cases(.))
+
+tail(turtles)
+```
+
+# Data Analysis
+
+## Question 1: Did the number of nest studied change by year?
+
+To answer this question, we will proceed to make a frequency table of nests by year. And then plot it in a barplot.
+
+```{r Q1 Frequency table}
+table(turtles$Year)
+```
+We see that the frequency table is already ordered. We will proceed to store this object into R and plot it using ggplot2 library from tidyverse.
+
+```{r Q1 Barplot}
+table(turtles$Year) %>%
+    data.frame(.) %>%
+    ggplot(aes(x = Var1, y = Freq)) +
+    geom_bar(stat = 'identity') +
+    theme_bw() +
+    xlab("Year") +
+    ylab("Nests")
+```
+
+The last step is to save the plot into the figures table, not only displaying it in the markdown result
+
+```{r Q1 Figure Output}
+png("Figures/Q1_Nests_Per_Year.png", width = 1000, height = 600)
+table(turtles$Year) %>%
+    data.frame(.) %>%
+    ggplot(aes(x = Var1, y = Freq)) +
+    geom_bar(stat = 'identity') +
+    theme_bw() +
+    xlab("Year") +
+    ylab("Nests")
+dev.off()
+```
+
+## Question 2: Was there a difference in clutch size between the years covered by the study?
+
+We have different ways to address this question graphically. The first we thought about was to use boxplots
+
+```{r Q2 Plot}
+turtles %>%
+    filter(Clutch_Size != -999.9) %>%
+    ggplot(aes(x = factor(Year), y = Clutch_Size)) +
+    geom_boxplot() +
+    theme_bw() +
+    xlab("Year") +
+    ylab("Clutch Size (# Eggs)")
+```
+
+We can observe that the average number of eggs per nest seems to be stable through time. Further statistical tests may provide better insights on this observed trend.
+
+```{r Q2 Figure output}
+png("Figures/Q2_ClutchSize_Per_Year.png", width = 1000, height = 600)
+turtles %>%
+    filter(Clutch_Size != -999.9) %>%
+    ggplot(aes(x = factor(Year), y = Clutch_Size)) +
+    geom_boxplot() +
+    theme_bw() +
+    xlab("Year") +
+    ylab("Clutch Size (# Eggs)")
+dev.off()
+```

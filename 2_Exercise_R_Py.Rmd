@@ -1,0 +1,146 @@
+---
+title: "Creating reproductible documents - Integrating R and Python code"
+author: "LMM, AA"
+date: "2021/05/19"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  word_document: default
+---
+
+Now, we will proceed to replicate the same exercise we did before, but mixing R and Python code. Python code will serve to read and clean the data, while R code will be used to plot and save the figures.
+
+This is to show you with a simple example how we can use the capabilities of both languages. As you advance in your studies or research, this may be a useful tool to have in your toolbox.
+
+We will skip step 1, 2 and 5 of the previous exercise. We will use the same data and folder structure we had before.
+
+## 3. Create a new R Notebook
+
+Following the same instructions as before, we will create a second R Notebook, and we will answer the same two questions as before, regarding the turtle _Chrysemys picta_, and using data from the paper:
+
+> Lisa E. Schwanz, Rachel M. Bowden, Ricky-John Spencer, and Fredric J. Janzen. 2009. Nesting ecology and offspring recruitment in a long-lived turtle. Ecology 90:1709.
+
+1. Did the number of nest studied change by year?
+2. Was there a difference in clutch size between the years covered by the study?
+
+# 5. Create a chunk to load the packages we will use for this.
+
+Remember that:
+* To add an **R chunk** you can click on *Insert Chunk*, or press *Ctrl+Shift+Enter*. We will now make distinctions between R and Python chunks.
+* To load an R library, we can use the functions *library(packageName)* or *require(packageName)*
+* To install a package, we can use the function *install.packages("packageName")*
+
+The R packages we will load are:
+* tidyverse
+* reticulate
+
+We are adding the R package [reticulate](https://rstudio.github.io/reticulate/). Aside from R/Python puns regarding the Reticulated Python ( _Malayopython reticulatus_ ), this R package will allow us to use python libraries and functions within our RMarkdown code. Installing this package may take a while.
+
+After reticulate is installed and loaded into R, **we need to install the _pandas_ python library**. We can run the following code on console _py_install("pandas")_, or you can leave a record of it in your notebook. Whichever you prefer.
+
+# 6. Create a new section in your R Notebook for loading and cleaning data
+
+Remember that your dataset is located in a specific folder within the R project we created before. Create a new R chunk and read your data into R. You can name it however you want, but we suggest the name *turtles* as a standard moving forward in the exercise.
+
+1. Create a new **Python chunk** to load the data into R
+It should look like this, removing the quotes
+
+```{R, eval = F}
+"```{python}
+
+```"
+```
+    
+Notice that R and python chunks have the same initial structure, and what changes is what's written between the curly brackets. When you click on *Insert*, you will see other languages aside from R and Python that can also be integrated into an RMarkdown file.
+
+Your first python chunk should load the _pandas_ library, and perform the reading of the data frame with its read_csv function. The code should look like this at the end:
+
+```{}
+import pandas
+turtles = pandas.read_csv("Data\data.txt", sep = "\t")
+turtles
+```
+
+
+2. Create a new chunk for data cleaning
+* Print the _turtles_ data frame in the python chunk. It will show you the first and last 5 rows.
+
+3. In the same chunk, or a new one, let's remove the empty rows that were present at the end of our dataset. We can use the pandas method dropna(). After that, print turtles again. The code within your python chunk should look like this:
+
+```{}
+turtles = turtles.dropna()
+turtles
+```
+
+
+After this, only rows without NAs should be present. You may know or learn better ways to perform this filtering in python.
+
+# 7. Create a new section within your R notebook for Data Analysis, a new subsection for Question 1 and a new set of chunks
+
+Question 1 says: **Did the number of nest studied change by year?**
+
+Think for a second how would you approach this question numerically and then graphically? We are not talking necessarily about an hypothesis test, we just want to **see a possible trend** in the number of nest evaluated per year. 
+
+Without going further in the paper, a quick exploratory analysis like this may tell us whether or not the experimenters decided to use a standard number of nests per year in the site of their study, or if the number of nests varied across years. If the latter is true, we may ask ourselves why. Maybe the researchers tried to keep a standard number, but some years they encountered less than that. Or maybe they tried to find as many as possible within their allotted experiment time per year. If this is the case, we may be able to correlate the number of nests encountered to other environmental or biological variables available for the site on those years. Some of these variables may be climatic variables, others may be vegetation or landscape change, etc.
+
+You may have an answer by now, and we encourage you to go with it. Now we will propose our way to do it. Remember that there can be more than one path to an appropriate result.
+
+We suggest to generate a frequency table by year, and then a barplot where the height of the bars represent the number of nests per year. We can discuss and add other different options you have in mind.
+
+**Steps to follow in a python chunk:**
+1. Create the table of frequency per Year on the *turtles* dataframe
+2. Convert this table into a data frame
+* One example of these two steps in python code is:
+
+```{}
+pandas.crosstab(index=turtles['Year'], columns='count')
+
+nestyears = pandas.crosstab(index=turtles['Year'], columns='count')
+```
+
+We created a new object called nestyears, that contains the frequency table
+
+**Steps to follow in an R chunk:**
+3. Make your plot
+4. Save your plot into the *Figures* folder
+
+For these two steps, we already created the frequency table in python. All python objects we have loaded and created are stored within an object called ***py*** in our R session. We can extract these objects and put them in R chunks by using the following statement **py$ObjectName**. As such, your code to make the plot in an R chunk, using the data we have manipulated with python, should look like this:
+
+```{}
+py$nestyears %>%
+    ggplot(aes(x = rownames(.), y = count)) +
+    geom_bar(stat = 'identity') +
+    theme_bw() +
+    xlab("Year") +
+    ylab("Nests")
+```
+
+Modify the following chunks accordingly.
+
+# 8. Create a new subsection for Question 2 and a new set of chunks
+
+Again, think for a second how would you address this question, both mathematically and graphically. We think that this question can potentially have some statistics to it, but let's omit that part for now.
+
+For this, we suggest the use of boxplots per year, showing the distribution of clutch sizes.
+
+For this, there may not be any necessary data cleaning step.
+
+**Steps to follow in a python chunk:**
+1. Clean the data frame based on the Clutch_Size column. Missing values are recorded as -999.9. Remove these rows
+
+Filtering data in python (with the pandas library) can be very familiar to those used to filtering data in base R. A code for this step could look like this:
+
+```{}
+filtered_turtles = turtles[turtles['Clutch_Size'] != -999.9]
+```
+
+In here, we created a new python object called *filtered_turtles*. Modify the following chunks accordingly.
+
+**Steps to follow in an R chunk:**
+2. Create a boxplot
+2. Save the plot into the *Figures* folder
+
+## Exercise conclusion
+
+You have created your second Rmarkdown notebook to perform an exploratory data analysis, and now you were able to combine two different languages!
